@@ -3,20 +3,13 @@ from flask import render_template
 from flask_restful import Resource, Api
 import json
 import requests
-from OpenSSL import SSL
-
-context = SSL.Context(SSL.SSLv23_METHOD)
-context.use_privatekey_file('server.key')
-context.use_certificate_file('server.crt')
+import os
 
 app = Flask(__name__)
 api = Api(app)
 
-token = "CAACygOjEnAgBALPUwZCvbZClUW6sfQzhQgbr5hROUYMqGYF2dPCbuST6zCzyDIRjZB7egcJBBVj07z8RkLfP62ZBBOhcSZCIm954cky1KniIZAOMAw0CZAGbX2IZADIqZA6mgXm8H8FVven6TJSH2ZA9uGMz28DBgaTzmKcvWH5vCq7101Jiu6Ci4ZCgv98nQ2zbJ2jZAyGEOj89JAZDZD"
+token = os.environ.get('MESSENGER_TOKEN')
 
-class HelloWorld(Resource):
-    def get(self):
-        return {'hello': 'world'}
 
 class Webhook(Resource):
     def get(self):
@@ -47,10 +40,12 @@ class Webhook(Resource):
         except Exception as e:
             raise e
 
-api.add_resource(HelloWorld, '/')
 api.add_resource(Webhook, '/webhook')
 
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', debug=True, port=9999)
+    # Use SSL certificates to enable HTTPS communication
+    context = ('server.crt', 'server.key')
+    print "Using token " + token.__str__()
+    app.run(host='0.0.0.0', debug=True, port=9999, ssl_context=context)
