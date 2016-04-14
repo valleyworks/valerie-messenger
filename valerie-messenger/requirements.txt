@@ -1,2 +1,4 @@
-Flask
-tornado
+Flask==0.10.1
+tornado==4.3
+Flask-RESTful==0.3.5
+requests==2.9.1
