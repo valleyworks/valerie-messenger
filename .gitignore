@@ -76,3 +76,7 @@ target/
 pyvenv.cfg
 .venv
 pip-selfcheck.json
+*.crt
+*.csr
+*.key*
+.idea

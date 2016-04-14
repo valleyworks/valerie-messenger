@@ -3,6 +3,11 @@ from flask import render_template
 from flask_restful import Resource, Api
 import json
 import requests
+from OpenSSL import SSL
+
+context = SSL.Context(SSL.SSLv23_METHOD)
+context.use_privatekey_file('server.key')
+context.use_certificate_file('server.crt')
 
 app = Flask(__name__)
 api = Api(app)
