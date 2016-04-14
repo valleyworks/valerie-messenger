@@ -9,12 +9,12 @@ app = Flask(__name__)
 api = Api(app)
 
 token = os.environ.get('MESSENGER_TOKEN')
-
+verify_token = os.environ.get('MESSENGER_VERIFY_TOKEN')
 
 class Webhook(Resource):
     def get(self):
         token = request.args.get('hub.verify_token')
-        if token == "TESTINGTOKEN":
+        if token == verify_token:
             return int(request.args.get('hub.challenge'))
 
     def post(self):
@@ -47,5 +47,10 @@ api.add_resource(Webhook, '/webhook')
 if __name__ == "__main__":
     # Use SSL certificates to enable HTTPS communication
     context = ('server.crt', 'server.key')
+
+    if token in (None, "") or verify_token in (None, ""):
+        print "Please set MESSENGER_TOKEN and MESSENGER_VERIFY_TOKEN env vars and try again."
+        exit()
+
     print "Using token " + token.__str__()
     app.run(host='0.0.0.0', debug=True, port=9999, ssl_context=context)
